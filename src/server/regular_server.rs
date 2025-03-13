@@ -19,7 +19,7 @@ pub struct Server {
     /// Server Player info.
     pub players: Players,
     /// Server description, similar to MOTD.
-    pub description: Description,
+    pub description: String,
     /// Server icon, base64 encoding.
     pub favicon: String,
 
