@@ -5,6 +5,7 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use std::{
+    fmt::Display,
     io::{Read, Write},
     net::TcpStream,
 };
@@ -136,6 +137,12 @@ pub struct ForgeData {
     pub channels: Vec<ForgeChannel>,
 }
 
+impl Display for ForgeData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Mods: {:#?}\n Channels: {:#?}", self.mods, self.channels)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct ForgeMod {
@@ -150,6 +157,22 @@ pub struct ForgeChannel {
     pub res: String,
     pub version: String,
     pub required: bool,
+}
+
+impl Display for ForgeMod {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ID: {}, marker: {}", self.mod_id, self.modmarker)
+    }
+}
+
+impl Display for ForgeChannel {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Res: {}, version: {}, required: {}",
+            self.res, self.version, self.required
+        )
+    }
 }
 
 pub fn get_server_status(conf: &Conf) -> Result<Server, MspErr> {
