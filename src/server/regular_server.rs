@@ -13,7 +13,7 @@ use std::{
 const DEFAULT_SERVER_PORT: u16 = 25565;
 
 /// Regular Server info type.
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Server {
     /// Server version. Includes version name and protocol number.
     pub version: Version,
@@ -55,14 +55,14 @@ impl std::fmt::Display for Server {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct Version {
     pub name: String,
     pub protocol: i32,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(deny_unknown_fields, default)]
 pub struct Players {
     pub max: i32,
@@ -80,7 +80,7 @@ impl Default for Players {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct Player {
     pub name: String,
@@ -131,7 +131,7 @@ impl Default for DescriptionExtra {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ForgeData {
     pub mods: Vec<ForgeMod>,
     pub channels: Vec<ForgeChannel>,
@@ -143,7 +143,7 @@ impl Display for ForgeData {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct ForgeMod {
     #[serde(alias = "modId", rename = "modId")]
@@ -151,7 +151,7 @@ pub struct ForgeMod {
     pub modmarker: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct ForgeChannel {
     pub res: String,
@@ -206,6 +206,7 @@ pub fn get_server_status(conf: &Conf) -> Result<Server, MspErr> {
     match std::str::from_utf8(&data_buffer) {
         Ok(str) => match serde_json::from_str::<Server>(str) {
             Ok(mut server) => {
+                //println!("got string: {}", str);
                 // Get server ping
                 let ping = get_server_ping(&mut socket)?;
 
